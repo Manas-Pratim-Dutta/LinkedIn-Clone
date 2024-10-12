@@ -101,3 +101,11 @@ export const logout = (req, res) => {
     res.json({ message: "Logged out successfully" });
 }
 
+export const getCurrentUser = async (req, res) => {
+    try {
+        res.json(req.user);
+    } catch (error) {
+        console.log("Error in getCurrentUser controller:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+}
