@@ -1,4 +1,5 @@
 import User from "../models/user.model.js";
+import cloudinary from "../database/cloudinary.js"
 
 export const getSuggestedConnection = async (req, res) => {
     try {
@@ -52,12 +53,27 @@ export const updateProfile = async (req, res) => {
 
         const updatedData = {};
 
-        for(const field of allowedFields){
-            if(req.body[field]){
+        for (const field of allowedFields) {
+            if (req.body[field]) {
                 updatedData[field] = req.body[field];
             }
         }
-    } catch (error) {
 
+        if(req.body.profilePicture){
+            const result = await cloudinary.uploader.upload(req.body.profilePicture)
+            updatedData.profilePicture = result.secure_url;
+        }
+
+        if(req.body.bannerImg){
+            const result = await cloudinary.uploader.upload(req.body.bannerImg)
+            updatedData.bannerImg = result.secure_url;
+        }
+
+        const user = await User.findByIdAndUpdate(req.user._id, { $set: updatedData }, { new: true }).select("-password");
+
+        res.json(user);
+    } catch (error) {
+        console.error("Error in updateProfile controller:", error);
+        res.status(500).json({ message: "Server error" });
     }
 }
