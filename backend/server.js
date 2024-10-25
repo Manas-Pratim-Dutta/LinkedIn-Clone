@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 import authRoutes from "./routes/auth.route.js"
 import userRoutes from "./routes/users.route.js"
 import postRoutes from "./routes/post.route.js"
@@ -14,7 +15,14 @@ const app = express();
 
 const PORT = process.env.PORT || 5000;
 
-app.use(express.json({limit:"5mb"})); // parse JSON request bodies.
+app.use(
+    cors({
+        origin: "http://localhost:5173",
+        creadentials: true, //-> allowed them to sent cookies with response
+    })
+);
+
+app.use(express.json({ limit: "5mb" })); // parse JSON request bodies.
 app.use(cookieParser());
 
 app.use("/api/v1/auth", authRoutes)
