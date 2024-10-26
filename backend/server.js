@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 5000;
 app.use(
     cors({
         origin: "http://localhost:5173",
-        creadentials: true, //-> allowed them to sent cookies with response
+        credentials: true, //-> allowed them to sent cookies with response
     })
 );
 
